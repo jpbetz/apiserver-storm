@@ -1,0 +1,13 @@
+# name	binary	gates	extra_env
+head	/tmp/quick-apiserver/kube-apiserver	-	-
+rangestream-off	/tmp/quick-apiserver/kube-apiserver	EtcdRangeStream=false	-
+concdecode-on	/tmp/quick-apiserver/kube-apiserver	ConcurrentWatchObjectDecode=true	-
+watchlist	/tmp/quick-apiserver/kube-apiserver	-	WATCHLIST=1
+no-presize	/home/jpbetz/projects/k8s-worktrees/bins/kube-apiserver-no-presize	-	-
+no-bufproto	/home/jpbetz/projects/k8s-worktrees/bins/kube-apiserver-no-bufproto	-	-
+pooled-pre	/home/jpbetz/projects/k8s-worktrees/bins/kube-apiserver-pooled-pre	-	-
+pooled-post	/home/jpbetz/projects/k8s-worktrees/bins/kube-apiserver-pooled-post	-	-
+table-pre	/home/jpbetz/projects/k8s-worktrees/bins/kube-apiserver-table-pre	-	-
+table-post	/home/jpbetz/projects/k8s-worktrees/bins/kube-apiserver-table-post	-	-
+locks-pre	/home/jpbetz/projects/k8s-worktrees/bins/kube-apiserver-locks-pre	-	CHURN_QPS=300
+locks-post	/home/jpbetz/projects/k8s-worktrees/bins/kube-apiserver-locks-post	-	CHURN_QPS=300

@@ -19,8 +19,9 @@ methodology finding.
 ## Requirements
 
 - A built `kube-apiserver` binary (any version; the harness is version-agnostic)
-  and its serving certs/kubeconfig — [`quick-apiserver`](https://github.com/jpbetz/bin)
-  produces both, or point at your own via env.
+  and its serving certs/kubeconfig — [`qas`](https://github.com/jpbetz/bin)
+  produces both (`qas up` once; the binary name `qas` in arms.tsv means
+  `$(qas env QAS_APISERVER_BIN)`), or point at your own via env.
 - `etcd` on `$PATH` or via `$KUBE_ROOT/third_party/etcd`.
 - Go (to build `stormtool`), Python 3, `curl`.
 

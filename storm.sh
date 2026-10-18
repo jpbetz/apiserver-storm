@@ -17,7 +17,9 @@ GATES=${2:-}
 
 HARNESS_DIR="$(cd "$(dirname "$0")" && pwd)"
 KUBE_ROOT=${KUBE_ROOT:-/home/jpbetz/projects/kubernetes}
-QA_DIR=/tmp/quick-apiserver
+# kube-apiserver's certs and kubeconfig come from qas (~/projects/bin): run
+# `qas up` once (and `qas down`) so they exist.
+QA_DIR=$(qas env QAS_DIR)
 SERVER=https://127.0.0.1:6443
 N_OBJECTS=${N_OBJECTS:-15000}
 OBJ_SIZE=${OBJ_SIZE:-4096}
@@ -27,7 +29,9 @@ BURST_COUNT=${BURST_COUNT:-80}
 RESOURCE=${RESOURCE:-configmaps}
 BURST_ACCEPTS=${BURST_ACCEPTS:-json}
 WATCHLIST=${WATCHLIST:-}
-APISERVER_BIN=${APISERVER_BIN:-$QA_DIR/kube-apiserver}
+# The token qas (the default, and arms.tsv's) means the kube-apiserver qas built.
+APISERVER_BIN=${APISERVER_BIN:-qas}
+if [[ $APISERVER_BIN == qas ]]; then APISERVER_BIN=$(qas env QAS_APISERVER_BIN); fi
 SEED=${SEED:-42}
 CHURN_QPS=${CHURN_QPS:-}
 
@@ -39,10 +43,10 @@ mkdir -p "$RUNDIR/pprof" "$RUNDIR/metrics"
 cp "$HARNESS_DIR/storm.sh" "$HARNESS_DIR/sampler.sh" "$HARNESS_DIR/analyze.py" "$HARNESS_DIR/stormtool.go" "$RUNDIR/"
 STORMTOOL="$HARNESS_DIR/stormtool"
 
-# Client certs out of the kubeconfig.
+# Client cert: qas's admin user (system:masters), the same one its kubeconfig embeds.
 CERT="$RUNDIR/client.crt"; KEY="$RUNDIR/client.key"
-grep 'client-certificate-data' "$QA_DIR/kubeconfig" | awk '{print $2}' | base64 -d > "$CERT"
-grep 'client-key-data' "$QA_DIR/kubeconfig" | awk '{print $2}' | base64 -d > "$KEY"
+cp "$QA_DIR/certs/admin.crt" "$CERT"
+cp "$QA_DIR/certs/admin.key" "$KEY"
 
 CERTS="$QA_DIR/certs"
 APISERVER_ARGS=(
